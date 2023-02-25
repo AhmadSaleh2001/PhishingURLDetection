@@ -18,7 +18,10 @@ function Footer() {
                   href="https://www.linkedin.com/in/ahmadsaleh2001/"
                   target="_blank"
                 >
-                  <i class="fab fa-linkedin" style={{ color: "#0072b1" }}></i>
+                  <i
+                    className="fab fa-linkedin"
+                    style={{ color: "#0072b1" }}
+                  ></i>
                 </a>
               </span>
             </h5>

@@ -6,7 +6,7 @@ import "../layout/backend.css";
 import { MyRealContext } from "../Helpers/MyContext";
 function Navbar() {
   let Loc = useLocation();
-  let { SetPath } = useContext(MyRealContext);
+  let { SetPath, User, SetUser, SetToken } = useContext(MyRealContext);
   useEffect(() => {
     // console.log(Loc.pathname);
     SetPath(Loc.pathname);
@@ -18,6 +18,17 @@ function Navbar() {
     ["Tips", "/Tips"],
     ["About Us", "/AboutUs"],
   ];
+
+  let HandleLogout = () => {
+    fetch("http://localhost:1212/admin/logout", {
+      credentials: "include",
+    })
+      .then((X) => X.json())
+      .then((X) => {
+        SetUser(null);
+        SetToken(null);
+      });
+  };
   return (
     <header className="p-3 mb-3 border-bottom">
       <div className="container">
@@ -34,44 +45,52 @@ function Navbar() {
               return <NavItem Name={Item[0]} To={Item[1]} key={Idx} />;
             })}
           </ul>
-          {/* <Link to={"/Login"} className="btn btn-primary">
-            Login
-          </Link> */}
-          {/* <div className="dropdown text-end">
-            <a
-              href="#"
-              className="d-block link-dark text-decoration-none dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src={MyImage}
-                alt="mdo"
-                width="32"
-                height="32"
-                className="rounded-circle"
-              />
-            </a>
-            <ul className="dropdown-menu text-small">
-              <li>
-                <Link className="dropdown-item" to={"/TrainModel"}>
-                  Train Model
-                </Link>
-              </li>
+          {!User && (
+            <Link to={"/Login"} className="btn btn-primary">
+              Login
+            </Link>
+          )}
 
-              <li>
-                <Link className="dropdown-item" to={"/Rates"}>
-                  Rates
-                </Link>
-              </li>
+          {User && (
+            <div className="dropdown text-end">
+              <a
+                href="#"
+                className="d-block link-dark text-decoration-none dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src={MyImage}
+                  alt="mdo"
+                  width="32"
+                  height="32"
+                  className="rounded-circle"
+                />
+              </a>
+              <ul className="dropdown-menu text-small">
+                <li>
+                  <Link className="dropdown-item" to={"/TrainModel"}>
+                    Train Model
+                  </Link>
+                </li>
 
-              <li>
-                <a className="dropdown-item" href="#">
-                  Logout
-                </a>
-              </li>
-            </ul>
-          </div> */}
+                <li>
+                  <Link className="dropdown-item" to={"/Rates"}>
+                    Rates
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    className="dropdown-item text text-danger"
+                    onClick={() => HandleLogout()}
+                  >
+                    Logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </header>

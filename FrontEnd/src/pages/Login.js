@@ -1,11 +1,41 @@
 import React from "react";
 import Swal from "sweetalert2";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../Helpers/useAuth";
+import Redirect from "../Helpers/Redirect";
 function Login() {
-  Swal.fire({
-    icon: "success",
-    title: "Successfully Login !",
-    text: "",
-  });
+  const navigate = useNavigate();
+
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+  let { User, SetUser, SetToken } = useAuth();
+  let HandleLogin = async (E) => {
+    E.preventDefault();
+
+    let headers = new Headers({ "Content-Type": "application/json" });
+
+    let Response = await fetch("http://localhost:1212/admin/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers,
+      credentials: "include",
+    });
+
+    let Data = await Response.json();
+    if (Response.status == 401 || Response.status == 406) {
+      Redirect("error", Data.Msg, "", function () {});
+    } else {
+      SetUser(Data.User);
+      SetToken(Data.AToken);
+      Redirect("success", Data.Msg, "", function () {
+        navigate("/");
+      });
+    }
+  };
   return (
     <form className="text-center d-flex flex-column align-items-center">
       <center className="mb-3">
@@ -18,6 +48,8 @@ function Login() {
           className="form-control col-sm-12"
           id="Email"
           required
+          value={email}
+          onInput={(E) => setEmail(E.target.value)}
         />
       </div>
 
@@ -28,9 +60,15 @@ function Login() {
           className="form-control col-sm-12"
           id="Password"
           required
+          value={password}
+          onInput={(E) => setPassword(E.target.value)}
         />
       </div>
-      <button type="submit" className="btn btn-primary mb-3">
+      <button
+        type="submit"
+        className="btn btn-primary mb-3"
+        onClick={(E) => HandleLogin(E)}
+      >
         Login
       </button>
     </form>

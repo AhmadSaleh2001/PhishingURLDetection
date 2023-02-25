@@ -9,19 +9,29 @@ import Login from "./pages/Login";
 import TrainModel from "./pages/TrainModel";
 import Rates from "./pages/Rates";
 import AboutUs from "./pages/AboutUs";
+import Layout from "./components/Layout";
+import RequireAuth from "./components/RequireAuth";
+
 function App() {
   return (
     <Router>
       <Navbar />
       <div className="container">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Tips" element={<Tips />} />
-          <Route path="/Product" element={<Product />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/TrainModel" element={<TrainModel />} />
-          <Route path="/Rates" element={<Rates />} />
-          <Route path="/AboutUs" element={<AboutUs />} />
+          {/* Public Routes */}
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/Tips" element={<Tips />} />
+            <Route path="/Product" element={<Product />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/AboutUs" element={<AboutUs />} />
+          </Route>
+
+          {/* Protected Paths */}
+          <Route element={<RequireAuth />}>
+            <Route path="/Rates" element={<Rates />} />
+            <Route path="/TrainModel" element={<TrainModel />} />
+          </Route>
         </Routes>
       </div>
       <Footer />
