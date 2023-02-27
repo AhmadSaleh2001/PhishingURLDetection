@@ -53,11 +53,11 @@ App.listen(1212, async () => {
       password: "ahmad123",
     });
 
-    // await Rate.create({
-    //   url: "www.google.com",
-    //   feedback: "good classification",
-    //   rate_from_5: 5,
-    // });
+    await Rate.create({
+      url: "www.google.com",
+      feedback: "good classification",
+      rate_from_5: 5,
+    });
   } catch (error) {
     console.log(error);
     console.log("There is Some Error When Connect To DB");

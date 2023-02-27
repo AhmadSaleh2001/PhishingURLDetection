@@ -20,7 +20,7 @@ let login = async (Req, Res) => {
     const AToken = getNewAccessToken(Search);
     let RToken = getNewRefreshToken(Search);
 
-    Res.cookie("AToken", AToken, { httpOnly: true, maxAge: 5 * 1000 });
+    Res.cookie("AToken", AToken, { httpOnly: true, maxAge: 10 * 1000 });
     Res.cookie("RToken", RToken, {
       httpOnly: true,
       maxAge,
@@ -44,13 +44,11 @@ let refresh = (Req, Res) => {
   if (!Ans) throw new Error("Session Expired");
 
   const AToken = getNewAccessToken(Ans);
-  // console.log(Ans);
   Res.cookie("AToken", AToken, { httpOnly: true, maxAge: 10 * 1000 });
-  Res.status(200).json({ User: Ans, AToken });
+  Res.status(200).json({ AToken });
 };
 
 let logout = (Req, Res) => {
-  // console.log(Req.cookies);
   Res.clearCookie("AToken");
   Res.clearCookie("RToken");
   Res.status(200).json({ Msg: "Successfully Logout" });

@@ -1,14 +1,14 @@
 const JWT = require("jsonwebtoken");
-let getNewAccessToken = (User) => {
-  let AToken = JWT.sign({ User }, "AhmadSalehAccessToken2001", {
+let getNewAccessToken = (Search) => {
+  let AToken = JWT.sign({ Search }, "AhmadSalehAccessToken2001", {
     expiresIn: "10s",
   });
 
   return AToken;
 };
 
-let getNewRefreshToken = (User) => {
-  let RToken = JWT.sign({ User }, "AhmadSalehRefreshToken2001", {
+let getNewRefreshToken = (Search) => {
+  let RToken = JWT.sign({ Search }, "AhmadSalehRefreshToken2001", {
     expiresIn: "1d",
   });
 

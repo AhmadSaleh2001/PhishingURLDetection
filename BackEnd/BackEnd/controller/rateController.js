@@ -2,10 +2,10 @@ let { Rate } = require("../model/rate");
 
 let add = async (Req, Res) => {
   try {
-    await Rate.create({ ...Req.body, modelId: 1 });
+    await Rate.create({ ...Req.body });
     Res.status(200).json({ Msg: "Rate Added Successfully !" });
   } catch (Err) {
-    Res.status(400).json({ Msg: Err });
+    Res.status(401).json({ Msg: Err });
   }
 };
 
