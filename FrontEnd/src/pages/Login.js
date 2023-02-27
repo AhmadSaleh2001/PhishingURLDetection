@@ -2,7 +2,7 @@ import React from "react";
 import Swal from "sweetalert2";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../Helpers/useAuth";
+import useAuth from "../Hooks/useAuth";
 import Redirect from "../Helpers/Redirect";
 function Login() {
   const navigate = useNavigate();

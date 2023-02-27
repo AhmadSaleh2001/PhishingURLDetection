@@ -11,8 +11,24 @@ import Rates from "./pages/Rates";
 import AboutUs from "./pages/AboutUs";
 import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
-
+import useAuth from "./Hooks/useAuth";
+import useRefresh from "./Hooks/useRefresh";
+import Redirect from "./Helpers/Redirect";
 function App() {
+  let { SetUser, SetToken } = useAuth();
+  let Refresh = useRefresh();
+  useEffect(() => {
+    let Check = async () => {
+      try {
+        let Ans = await Refresh();
+        SetToken(Ans.AToken);
+        SetUser(Ans.User);
+        // console.log("User : ", Ans.User);
+        // console.log("Token : ", Ans.AToken);
+      } catch (Err) {}
+    };
+    Check();
+  }, []);
   return (
     <Router>
       <Navbar />

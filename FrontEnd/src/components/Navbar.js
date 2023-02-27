@@ -1,12 +1,16 @@
 import React, { useEffect, useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavItem from "./NavItem";
-import MyImage from "../images/MyImage.jpg";
+import UserLoggedIn from "../images/UserLoggedIn.png";
 import "../layout/backend.css";
 import { MyRealContext } from "../Helpers/MyContext";
+import useLogout from "../Hooks/useLogout";
 function Navbar() {
   let Loc = useLocation();
-  let { SetPath, User, SetUser, SetToken } = useContext(MyRealContext);
+  let navigate = useNavigate();
+  let logout = useLogout();
+
+  let { SetPath, User } = useContext(MyRealContext);
   useEffect(() => {
     // console.log(Loc.pathname);
     SetPath(Loc.pathname);
@@ -19,20 +23,14 @@ function Navbar() {
     ["About Us", "/AboutUs"],
   ];
 
-  let HandleLogout = () => {
-    fetch("http://localhost:1212/admin/logout", {
-      credentials: "include",
-    })
-      .then((X) => X.json())
-      .then((X) => {
-        SetUser(null);
-        SetToken(null);
-      });
+  let HandleLogout = async () => {
+    await logout();
+    navigate("/");
   };
   return (
     <header className="p-3 mb-3 border-bottom">
       <div className="container">
-        <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-center">
           <Link
             to={"/"}
             className="fs-4 d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none"
@@ -40,7 +38,7 @@ function Navbar() {
             Goodbye Phishers
           </Link>
 
-          <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <ul className="nav col-12 col-md-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             {Links.map((Item, Idx) => {
               return <NavItem Name={Item[0]} To={Item[1]} key={Idx} />;
             })}
@@ -60,7 +58,7 @@ function Navbar() {
                 aria-expanded="false"
               >
                 <img
-                  src={MyImage}
+                  src={UserLoggedIn}
                   alt="mdo"
                   width="32"
                   height="32"

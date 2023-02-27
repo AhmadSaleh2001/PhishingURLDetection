@@ -1,13 +1,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import useAuth from "../Helpers/useAuth";
+import useAuth from "../Hooks/useAuth";
 import Swal from "sweetalert2";
 import Redirect from "../Helpers/Redirect";
+import useRefresh from "../Hooks/useRefresh";
 function Rates() {
   let [Data, SetData] = useState([]);
   let { Token, SetToken, SetUser } = useAuth();
   let navigate = useNavigate();
+  let Refresh = useRefresh();
+
   useEffect(() => {
     // console.log(Token);
     let getData = async (Token) => {
@@ -18,20 +21,16 @@ function Rates() {
         },
       });
       if (Ans.status == 401) {
-        let Token = await fetch("http://localhost:1212/admin/refresh", {
-          credentials: "include",
-        });
-        if (Token.status == 401) {
-          Token = await Token.json();
-          Redirect("error", Token.Msg, "", () => {
-            navigate("/");
-          });
+        try {
+          let Ans = await Refresh();
+          getData(Ans.AToken);
+        } catch (Error) {
+          // console.log("New Error : ", Error.message);
           SetUser(null);
           SetToken(null);
-        } else {
-          Token = await Token.json();
-          SetToken(Token.AToken);
-          getData(Token.AToken);
+          Redirect("error", "Oops...", Error.message, () => {
+            navigate("/");
+          });
         }
       } else {
         Ans = await Ans.json();
@@ -56,7 +55,6 @@ function Rates() {
               <th scope="col">Rate From 5</th>
               <th scope="col">Feedback</th>
               <th scope="col">Date</th>
-              <th scope="col">Operations</th>
             </tr>
           </thead>
           <tbody>
@@ -68,9 +66,6 @@ function Rates() {
                   <td>{Item.rate_from_5}</td>
                   <td>{Item.feedback}</td>
                   <td>{new Date(Item.createdAt).toUTCString()}</td>
-                  <td>
-                    <button className="btn btn-danger">Delete</button>
-                  </td>
                 </tr>
               );
             })}
